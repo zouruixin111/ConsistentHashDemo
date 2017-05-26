@@ -6,11 +6,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class ConditionDemo1 {
 
-    Lock      lock      = new ReentrantLock();
-    Condition condition = lock.newCondition();
+    Lock         lock      = new ReentrantLock();
+    Condition    condition = lock.newCondition();
 
-    int       flag      = 0;
-    volatile int       change = 0;
+    int          flag      = 0;
+    volatile int change    = 0;
 
     public static void main(String[] args) {
         ConditionDemo1 demo = new ConditionDemo1();
@@ -24,10 +24,10 @@ public class ConditionDemo1 {
         public void run() {
             while (flag < 3) {
                 lock.lock();
-                if(flag < 3){
-                    if(change == 0){
-                        System.out.println("thread1 == flag = " + flag);
-                        try {
+                try {
+                    if (flag < 3) {
+                        if (change == 0) {
+                            System.out.println("thread1 == flag = " + flag);
                             int n = flag * 3 + 1;
                             for (int i = n; i < n + 3; i++) {
                                 System.out.println("1==== " + i);
@@ -35,12 +35,13 @@ public class ConditionDemo1 {
                             flag++;
                             change = 1;
                             condition.signal();
-                        } finally {
-                            lock.unlock();
+
+                        } else {
+                            condition.awaitUninterruptibly();
                         }
-                    }else{
-                        condition.awaitUninterruptibly();
                     }
+                } finally {
+                    lock.unlock();
                 }
             }
         }
@@ -52,23 +53,24 @@ public class ConditionDemo1 {
         public void run() {
             while (flag < 3) {
                 lock.lock();
-                if(flag < 3){
-                    if(change == 1){
-                        System.out.println("thread1 == flag = " + flag);
-                        try {
+                try {
+                    if (flag < 3) {
+                        if (change == 1) {
+                            System.out.println("thread1 == flag = " + flag);
                             int n = flag * 3 + 1;
                             for (int i = n; i < n + 3; i++) {
-                                System.out.println("2==== " + i);
+                                System.out.println("1==== " + i);
                             }
                             flag++;
-                            change = 0;
+                            change = 1;
                             condition.signal();
-                        } finally {
-                            lock.unlock();
+
+                        } else {
+                            condition.awaitUninterruptibly();
                         }
-                    }else{
-                        condition.awaitUninterruptibly();
                     }
+                } finally {
+                    lock.unlock();
                 }
             }
         }

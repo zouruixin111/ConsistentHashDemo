@@ -27,9 +27,9 @@ public class ConditionDemo {
                         System.out.println("A is Running");
                         i--;
                         key = 0;
-//                        c.signal();
+                        c.signal();
                     }else{
-//                     c.awaitUninterruptibly();                        
+                     c.awaitUninterruptibly();                        
                     }
                     
                 }
@@ -52,9 +52,9 @@ public class ConditionDemo {
                         System.out.println("B is Running");
                         i--;
                         key = 1;
-//                        c.signal();
+                        c.signal();
                     }else{
-//                     c.awaitUninterruptibly();                        
+                     c.awaitUninterruptibly();                        
                     }
                     
                 }
